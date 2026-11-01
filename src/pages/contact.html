@@ -1,0 +1,56 @@
+<section class="page-hero coral">
+  <div class="wrap stack">
+    <span class="eyebrow">Contact</span>
+    <h1>Let's do some good</h1>
+    <p class="lede">Booking an event, bringing a reading to your school, or pitching a podcast guest? Send us a note and we'll get back to you.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap split wide-left">
+    <form class="form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-form data-thanks="Thanks! We got your message and will be in touch soon.">
+      <input type="hidden" name="form-name" value="contact">
+      <p class="hp"><label>Leave blank <input name="bot-field"></label></p>
+      <div class="form-row">
+        <div class="field"><label for="c-name">Name</label><input id="c-name" name="name" required autocomplete="name"></div>
+        <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" required autocomplete="email"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="c-org">Organization</label><input id="c-org" name="organization" autocomplete="organization"></div>
+        <div class="field"><label for="c-phone">Phone</label><input id="c-phone" name="phone" type="tel" autocomplete="tel"></div>
+      </div>
+      <div class="field">
+        <label for="c-type">What can we help with?</label>
+        <select id="c-type" name="interest" required>
+          <option value="">Choose one</option>
+          <option>Private team building event</option>
+          <option>Community pop-up</option>
+          <option>Kids reading visit</option>
+          <option>Podcast guest or sponsorship</option>
+          <option>Something else</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="c-size">Group size</label><input id="c-size" name="group_size" inputmode="numeric" placeholder="About how many people?"></div>
+        <div class="field"><label for="c-date">Preferred date</label><input id="c-date" name="preferred_date" type="date"></div>
+      </div>
+      <div class="field"><label for="c-msg">Tell us more</label><textarea id="c-msg" name="message" rows="5" placeholder="The cause you care about, your location, anything else we should know"></textarea></div>
+      <div><button class="btn" type="submit">Send message</button></div>
+      <p class="form-status" role="status" aria-live="polite"></p>
+    </form>
+
+    <aside class="contact-card">
+      <span class="eyebrow">Email us directly</span>
+      <div class="copy-line"><code>dogood@thatsjustgood.com</code><button class="btn small ghost" type="button" data-copy="dogood@thatsjustgood.com">Copy</button></div>
+      <span class="eyebrow" style="margin-top:12px">Follow along</span>
+      <div class="socials">
+        <a class="btn small ghost" href="https://www.instagram.com/thatsjustgood" target="_blank" rel="noopener">Instagram</a>
+        <a class="btn small ghost" href="https://www.tiktok.com/@thatsjustnick" target="_blank" rel="noopener">TikTok</a>
+        <a class="btn small ghost" href="https://www.linkedin.com/in/nickmarinojr/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn small ghost" href="https://www.youtube.com/channel/UCpWWwSa9jsb53tngJoJ1HcA" target="_blank" rel="noopener">YouTube</a>
+      </div>
+      <span class="eyebrow" style="margin-top:12px">Based in</span>
+      <p>Dallas–Fort Worth, Texas. Events anywhere.</p>
+    </aside>
+  </div>
+</section>

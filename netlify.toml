@@ -1,0 +1,29 @@
+[build]
+  publish = "site"
+  functions = "netlify/functions"
+
+# Old Wix URLs → new pages, so existing links and search results keep working
+[[redirects]]
+  from = "/our-story"
+  to = "/about"
+  status = 301
+
+[[redirects]]
+  from = "/connect"
+  to = "/contact"
+  status = 301
+
+[[redirects]]
+  from = "/consulting"
+  to = "/team-building"
+  status = 301
+
+[[redirects]]
+  from = "/shop"
+  to = "/"
+  status = 301
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
