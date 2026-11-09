@@ -114,7 +114,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   border-bottom: 1px solid var(--line);
 }
 .header-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 72px; }
-.wordmark { text-decoration: none; display: inline-grid; line-height: 0.82; font-family: var(--font-display); text-transform: uppercase; }
+.wordmark { text-decoration: none; display: inline-grid; padding-block: 8px; min-height: 44px; align-content: center; line-height: 0.82; font-family: var(--font-display); text-transform: uppercase; }
 .wordmark .w1 { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; }
 .wordmark .w2 { font-size: 1.7rem; font-weight: 900; letter-spacing: -0.02em; }
 .wordmark .w2 span { color: var(--coral); }

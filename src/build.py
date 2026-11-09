@@ -37,7 +37,7 @@ def read(*p):
 def links(mode):
     if mode == "site":
         return {slug: ("/" if slug == "home" else "/" + f.replace(".html", "")) for slug, f, *_ in PAGES}
-    return {slug: ("#" if slug == "home" else "#" + slug) for slug, *_ in PAGES}
+    return {slug: "#" + slug for slug, *_ in PAGES}
 
 
 def fill(text, mode):
