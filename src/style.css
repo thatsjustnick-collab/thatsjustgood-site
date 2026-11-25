@@ -259,6 +259,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 }
 .cover { align-content: center; justify-items: center; gap: 10px; }
 .cover.cover-art { padding: 0; display: block; height: auto; }
+.podcast-hero-logo { width: 100%; max-width: 420px; height: auto; justify-self: center; }
+.podcast-band-logo { width: 220px; height: auto; }
+@media (max-width: 860px) { .podcast-hero-logo { max-width: 280px; justify-self: start; order: -1; } }
 .cover .c3 { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.14em; }
 .cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ep-meta { font-size: 0.9rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
