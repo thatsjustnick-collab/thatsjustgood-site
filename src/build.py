@@ -56,7 +56,7 @@ def header(mode, current=None):
         cls = ' class="btn"' if slug == "contact" else ""
         items.append(f'<a href="{L[slug]}"{cls}{cur}>{label}</a>')
     return f'''<header class="site-header"><div class="wrap header-row" style="position:relative">
-  <a class="wordmark" href="{L["home"]}" aria-label="That's Just Good home"><span class="w1">That's Just</span><span class="w2">Go<span>o</span>d</span></a>
+  <a class="wordmark" href="{L["home"]}" aria-label="That's Just Good home"><img class="logo-light" src="/images/brand/logo-horizontal.svg" alt="" width="248" height="44"><img class="logo-dark" src="/images/brand/logo-horizontal-reversed.svg" alt="" width="248" height="44"></a>
   <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
   <nav class="nav" id="site-nav" aria-label="Main">{"".join(items)}</nav>
 </div></header>'''
@@ -67,7 +67,7 @@ def footer(mode):
     return f'''<footer class="site-footer"><div class="wrap">
   <div class="footer-grid">
     <div class="stack">
-      <a class="wordmark" href="{L["home"]}"><span class="w1">That's Just</span><span class="w2">Go<span>o</span>d</span></a>
+      <a class="wordmark footer-logo" href="{L["home"]}" aria-label="That's Just Good home"><img src="/images/brand/logo-stacked-reversed.svg" alt="" width="181" height="120"></a>
       <p>Show up. Do good. Tell the story.</p>
       <p><a href="mailto:dogood@thatsjustgood.com">dogood@thatsjustgood.com</a></p>
     </div>
@@ -106,9 +106,10 @@ def build_site():
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="That's Just Good">
 <meta property="og:title" content="{html.escape(title)}"><meta property="og:description" content="{html.escape(desc)}">
-<meta property="og:url" content="{url}"><meta property="og:image" content="{DOMAIN}/images/share.jpg">
+<meta property="og:url" content="{url}"><meta property="og:image" content="{DOMAIN}/images/brand/share.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/images/brand/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/images/brand/apple-touch-icon.png">
 {FONTS}
 <link rel="stylesheet" href="/assets/style.css">
 </head>
@@ -125,9 +126,15 @@ def build_site():
 '''
         with open(os.path.join(SITE, fname), "w", encoding="utf-8") as f:
             f.write(doc)
-    # favicon
-    with open(os.path.join(SITE, "images", "favicon.svg"), "w") as f:
-        f.write('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#13294B"/><text x="32" y="44" text-anchor="middle" font-family="Arial Black,Arial" font-weight="900" font-size="34" fill="#8ED1FC">G</text></svg>')
+    # brand logo files (from the logo kit) used by the header, footer, tab icon and share image
+    brand_out = os.path.join(SITE, "images", "brand")
+    os.makedirs(brand_out, exist_ok=True)
+    for f in os.listdir(os.path.join(HERE, "brand")):
+        if f != "icon-2000.png":
+            shutil.copy(os.path.join(HERE, "brand", f), os.path.join(brand_out, f))
+    old_fav = os.path.join(SITE, "images", "favicon.svg")
+    if os.path.exists(old_fav):
+        os.remove(old_fav)
     shutil.copy(os.path.join(HERE, "deploy", "images-README.txt"), os.path.join(SITE, "images", "README.txt"))
 
 
@@ -150,6 +157,12 @@ def build_preview():
 {read("site.js")}
 </script>
 '''
+    # the preview has no image folder, so brand SVGs are embedded inline
+    import base64, re
+    def inline(m):
+        data = open(os.path.join(HERE, "brand", m.group(1)), "rb").read()
+        return 'src="data:image/svg+xml;base64,' + base64.b64encode(data).decode() + '"'
+    doc = re.sub(r'src="/images/brand/([\w.-]+\.svg)"', inline, doc)
     with open(os.path.join(PREVIEW, "index.html"), "w", encoding="utf-8") as f:
         f.write(doc)
 
