@@ -32,3 +32,39 @@
   for = "/site.webmanifest"
   [headers.values]
     Content-Type = "application/manifest+json"
+
+# Events system: pretty links that load the right page
+[[redirects]]
+  from = "/events/:slug"
+  to = "/event.html"
+  status = 200
+
+[[redirects]]
+  from = "/rsvp/:token"
+  to = "/rsvp.html"
+  status = 200
+
+[[redirects]]
+  from = "/team/:code"
+  to = "/team.html"
+  status = 200
+
+[[redirects]]
+  from = "/report/:token"
+  to = "/report.html"
+  status = 200
+
+[[redirects]]
+  from = "/certificate/:token"
+  to = "/certificate.html"
+  status = 200
+
+[[redirects]]
+  from = "/checkin/:token"
+  to = "/checkin.html"
+  status = 200
+
+[[redirects]]
+  from = "/events"
+  to = "/community#popup-list"
+  status = 301

@@ -3,7 +3,7 @@
     <span class="eyebrow">Community events</span>
     <h1>Pop-up good, right in your neighborhood</h1>
     <p class="lede">We pop up in parks, local businesses, and community spaces with everything needed to help a local cause. Come for an hour, bring a friend, and leave knowing you made a difference.</p>
-    <div class="btn-row"><a class="btn dark" href="#popup-list">Get pop-up alerts</a><a class="btn ghost" href="#host-popup">Host a pop-up</a></div>
+    <div class="btn-row"><a class="btn dark" href="#popup-list">See upcoming pop-ups</a><a class="btn ghost" href="#host-popup">Host a pop-up</a></div>
   </div>
 </section>
 
@@ -22,22 +22,28 @@
 </section>
 
 <section class="band surface" id="popup-list">
-  <div class="wrap split" style="align-items:center">
-    <div class="stack">
+  <div class="wrap stack-lg">
+    <div class="section-head">
       <span class="eyebrow">Upcoming pop-ups</span>
-      <h2>Next dates coming soon</h2>
-      <p class="muted lede">We announce new pop-ups to our list first. Add your email and we'll tell you when one is coming to your area.</p>
+      <h2>Pick a pop-up and save your spot</h2>
     </div>
-    <div class="notice" style="color:var(--ink)">
-      <form class="inline-form" name="popup-alerts" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-form data-thanks="You're on the list. We'll email you when the next pop-up is announced.">
-        <input type="hidden" name="form-name" value="popup-alerts">
-        <p class="hp"><label>Leave blank <input name="bot-field"></label></p>
-        <label class="hp" for="popup-email">Email address</label>
-        <input id="popup-email" name="email" type="email" required placeholder="you@email.com" autocomplete="email">
-        <input id="popup-zip" name="zip" inputmode="numeric" pattern="[0-9]{5}" placeholder="ZIP code" aria-label="ZIP code" style="flex:0 1 140px">
-        <button class="btn" type="submit">Notify me</button>
-      </form>
-      <p class="form-status" role="status" aria-live="polite"></p>
+    <ul class="event-list" data-upcoming="community" hidden></ul>
+    <div class="split" style="align-items:center" data-upcoming-empty>
+      <div class="stack">
+        <h3>Next dates coming soon</h3>
+        <p class="muted lede">We announce new pop-ups to our list first. Add your email and we'll tell you when one is coming to your area.</p>
+      </div>
+      <div class="notice" style="color:var(--ink)">
+        <form class="inline-form" name="popup-alerts" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-form data-thanks="You're on the list. We'll email you when the next pop-up is announced.">
+          <input type="hidden" name="form-name" value="popup-alerts">
+          <p class="hp"><label>Leave blank <input name="bot-field"></label></p>
+          <label class="hp" for="popup-email">Email address</label>
+          <input id="popup-email" name="email" type="email" required placeholder="you@email.com" autocomplete="email">
+          <input id="popup-zip" name="zip" inputmode="numeric" pattern="[0-9]{5}" placeholder="ZIP code" aria-label="ZIP code" style="flex:0 1 140px">
+          <button class="btn" type="submit">Notify me</button>
+        </form>
+        <p class="form-status" role="status" aria-live="polite"></p>
+      </div>
     </div>
   </div>
 </section>

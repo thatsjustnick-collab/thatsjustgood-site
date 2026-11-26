@@ -22,8 +22,21 @@ PAGES = [
      "Nick Marino Jr. talks with founders, nonprofit leaders and everyday changemakers about doing good in their communities. Listen on Spotify, Apple and YouTube."),
     ("about", "about.html", "About", "About That's Just Good and Founder Nick Marino Jr.",
      "Founded in 2020 by Nick Marino Jr., That's Just Good is a Dallas-Fort Worth media and events brand that brings people together to do good."),
+    ("plan", "plan.html", None, "Plan Your Team Building Event | That's Just Good",
+     "Plan a team building impact event in minutes: choose your cause, group size and date, see your price instantly, and lock in your date online."),
     ("contact", "contact.html", "Contact", "Contact & Book an Event | That's Just Good",
      "Book a team building impact event, a community pop-up or a kids reading visit, or pitch a podcast guest. Email dogood@thatsjustgood.com."),
+]
+
+# Pages rendered by /assets/app.js from the events API. Not indexed by search engines.
+APP_PAGES = [
+    ("event", "event.html", "Event | That's Just Good"),
+    ("rsvp", "rsvp.html", "Your RSVP | That's Just Good"),
+    ("booking", "booking.html", "Your Booking | That's Just Good"),
+    ("team", "team.html", "Team Event | That's Just Good"),
+    ("report", "report.html", "Impact Report | That's Just Good"),
+    ("certificate", "certificate.html", "Volunteer Certificate | That's Just Good"),
+    ("checkin", "checkin.html", "Check-in | That's Just Good"),
 ]
 
 FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Unbounded:wght@500;600;700;800;900&display=swap">'
@@ -37,7 +50,9 @@ def read(*p):
 def links(mode):
     if mode == "site":
         return {slug: ("/" if slug == "home" else "/" + f.replace(".html", "")) for slug, f, *_ in PAGES}
-    return {slug: "#" + slug for slug, *_ in PAGES}
+    out = {slug: "#" + slug for slug, *_ in PAGES}
+    out["plan"] = "#team-building"  # the planner needs the live API, so the preview points to Team Building
+    return out
 
 
 def fill(text, mode):
@@ -187,6 +202,7 @@ def build_extras():
 </main>
 {footer("site")}
 <script src="/assets/site.js" defer></script>
+<script type="module" src="/assets/app.js"></script>
 </body>
 </html>
 '''
@@ -200,6 +216,10 @@ def build_site():
     os.makedirs(os.path.join(SITE, "images"), exist_ok=True)
     shutil.copy(os.path.join(HERE, "style.css"), os.path.join(SITE, "assets", "style.css"))
     shutil.copy(os.path.join(HERE, "site.js"), os.path.join(SITE, "assets", "site.js"))
+    shutil.copy(os.path.join(HERE, "app.js"), os.path.join(SITE, "assets", "app.js"))
+    shutil.copy(os.path.join(HERE, "admin.js"), os.path.join(SITE, "assets", "admin.js"))
+    shutil.copy(os.path.join(HERE, "admin.html"), os.path.join(SITE, "admin.html"))
+    shutil.copy(os.path.join(ROOT, "netlify", "lib", "pricing.mjs"), os.path.join(SITE, "assets", "pricing.js"))
     for slug, fname, _label, title, desc in PAGES:
         body = fill(read("pages", slug + ".html"), "site")
         url = DOMAIN + ("/" if slug == "home" else "/" + fname.replace(".html", ""))
@@ -235,6 +255,38 @@ def build_site():
 </main>
 {footer("site")}
 <script src="/assets/site.js" defer></script>
+<script type="module" src="/assets/app.js"></script>
+</body>
+</html>
+'''
+        with open(os.path.join(SITE, fname), "w", encoding="utf-8") as f:
+            f.write(doc)
+    for slug, fname, title in APP_PAGES:
+        body = fill(read("pages", f"app-{slug}.html"), "site")
+        doc = f'''<!doctype html>
+<html lang="en" data-live>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{html.escape(title)}</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#13294B">
+<meta property="og:site_name" content="That's Just Good"><meta property="og:title" content="{html.escape(title)}">
+<meta property="og:image" content="{DOMAIN}/images/brand/share-home.jpg"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/images/brand/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/images/brand/apple-touch-icon.png">
+{FONTS}
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+{header("site")}
+<main id="main">
+{body}
+</main>
+{footer("site")}
+<script src="/assets/site.js" defer></script>
+<script type="module" src="/assets/app.js"></script>
 </body>
 </html>
 '''
@@ -259,7 +311,7 @@ def build_site():
 def build_preview():
     os.makedirs(PREVIEW, exist_ok=True)
     sections = "\n".join(
-        f'<div data-page="{slug}">\n{fill(read("pages", slug + ".html"), "preview")}\n</div>' for slug, *_ in PAGES)
+        f'<div data-page="{slug}">\n{fill(read("pages", slug + ".html"), "preview")}\n</div>' for slug, *_ in PAGES if slug != "plan")
     doc = f'''<title>That's Just Good</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 {FONTS}

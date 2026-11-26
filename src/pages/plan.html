@@ -1,0 +1,82 @@
+<section class="page-hero sky">
+  <div class="wrap stack">
+    <span class="eyebrow">Team building impact events</span>
+    <h1>Plan your event in five minutes</h1>
+    <p class="lede">Pick your format, cause, group size and date. You'll see your price as you go, and you can lock in your date today.</p>
+  </div>
+</section>
+
+<section class="band" data-app="plan">
+  <div class="wrap planner">
+    <form id="plan-form" novalidate>
+      <fieldset class="plan-step">
+        <legend><span class="n">1</span>How should we run it?</legend>
+        <div class="options">
+          <label class="option"><input type="radio" name="format" value="host_only" checked><b>Host Only</b><span>We plan and run the event. You provide the supplies for the activity.</span></label>
+          <label class="option"><input type="radio" name="format" value="all_inclusive"><b>All-Inclusive</b><span>We handle everything: supplies, setup, hosting, cleanup and delivery to the charity.</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="plan-step">
+        <legend><span class="n">2</span>Pick a cause</legend>
+        <div class="chip-options" id="p-causes"></div>
+        <div class="field" id="cause-other-wrap" hidden><label for="p-cause-other">Tell us the cause</label><input id="p-cause-other" name="cause_other" placeholder="For example: literacy, refugees, seniors"></div>
+      </fieldset>
+
+      <fieldset class="plan-step">
+        <legend><span class="n">3</span>Size and length</legend>
+        <div class="form-row">
+          <div class="field"><label for="p-size">How many people?</label><input id="p-size" name="group_size" type="number" inputmode="numeric" min="10" max="300" value="25" required></div>
+          <div></div>
+        </div>
+        <div class="options" id="p-durations"></div>
+      </fieldset>
+
+      <fieldset class="plan-step">
+        <legend><span class="n">4</span>When</legend>
+        <div class="form-row">
+          <div class="field"><label for="p-date">Preferred date</label><input id="p-date" name="preferred_date" type="date" required></div>
+          <div class="field"><label for="p-time">Start time</label>
+            <select id="p-time" name="start_time">
+              <option value="09:00">9:00 AM</option><option value="10:00">10:00 AM</option><option value="11:00">11:00 AM</option><option value="12:00">12:00 PM</option>
+              <option value="13:00">1:00 PM</option><option value="14:00" selected>2:00 PM</option><option value="15:00">3:00 PM</option><option value="16:00">4:00 PM</option><option value="17:00">5:00 PM</option><option value="18:00">6:00 PM</option>
+            </select></div>
+        </div>
+        <div class="field"><label for="p-alt">Backup date (optional)</label><input id="p-alt" name="alt_date" type="date"></div>
+      </fieldset>
+
+      <fieldset class="plan-step">
+        <legend><span class="n">5</span>Where</legend>
+        <div class="form-row">
+          <div class="field"><label for="p-loc">Location type</label>
+            <select id="p-loc" name="location_type">
+              <option value="office">Our office</option><option value="restaurant">A restaurant</option><option value="venue">An event venue</option><option value="help">Help us find a space</option>
+            </select></div>
+          <div class="field"><label for="p-addr">Address (if you know it)</label><input id="p-addr" name="address" autocomplete="street-address" placeholder="Street, city"></div>
+        </div>
+      </fieldset>
+
+      <fieldset class="plan-step" style="border-bottom:0">
+        <legend><span class="n">6</span>Your details</legend>
+        <div class="form-row">
+          <div class="field"><label for="p-org">Company or group</label><input id="p-org" name="org_name" required autocomplete="organization"></div>
+          <div class="field"><label for="p-name">Your name</label><input id="p-name" name="contact_name" required autocomplete="name"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="p-email">Work email</label><input id="p-email" name="email" type="email" required autocomplete="email"></div>
+          <div class="field"><label for="p-phone">Phone</label><input id="p-phone" name="phone" type="tel" autocomplete="tel"></div>
+        </div>
+        <div class="field"><label for="p-notes">Anything else? (optional)</label><textarea id="p-notes" name="notes" rows="3" placeholder="Occasion, accessibility needs, a specific charity you'd like to support"></textarea></div>
+      </fieldset>
+    </form>
+
+    <aside class="sticky-card" aria-label="Your estimate"><div class="estimate" id="estimate"></div></aside>
+  </div>
+</section>
+
+<!-- Backup form: catches requests if the booking system is ever offline -->
+<form name="team-booking" method="POST" data-netlify="true" hidden>
+  <input name="org_name"><input name="contact_name"><input name="email"><input name="phone"><input name="format"><input name="cause">
+  <input name="group_size"><input name="duration_min"><input name="preferred_date"><input name="alt_date"><input name="start_time">
+  <input name="location_type"><input name="address"><textarea name="notes"></textarea><input name="estimate">
+</form>
