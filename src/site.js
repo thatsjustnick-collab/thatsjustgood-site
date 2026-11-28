@@ -96,6 +96,31 @@
     show();
   }
 
+  /* ---------- Tabs (pricing audiences). Without JavaScript every panel shows. ---------- */
+  document.documentElement.classList.add("js");
+  $$("[data-tabs]").forEach(function (list) {
+    var tabs = $$("[data-tab]", list);
+    var scope = list.parentNode;
+    function select(name, focus) {
+      tabs.forEach(function (t) {
+        var on = t.getAttribute("data-tab") === name;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        if (on && focus) t.focus();
+      });
+      $$("[data-panel]", scope).forEach(function (p) { p.hidden = p.getAttribute("data-panel") !== name; });
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener("click", function () { select(t.getAttribute("data-tab")); });
+      t.addEventListener("keydown", function (e) {
+        var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (d) { e.preventDefault(); select(tabs[(i + d + tabs.length) % tabs.length].getAttribute("data-tab"), true); }
+      });
+    });
+    var start = tabs.filter(function (t) { return t.getAttribute("aria-selected") === "true"; })[0] || tabs[0];
+    select(start.getAttribute("data-tab"));
+  });
+
   $$("[data-year]").forEach(function (n) { n.textContent = new Date().getFullYear(); });
   if (!LIVE) $$("[data-live-only]").forEach(function (n) { n.hidden = true; });
 
