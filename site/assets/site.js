@@ -40,8 +40,35 @@
       menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
       menuBtn.textContent = open ? "Close" : "Menu";
     });
-    $$("a", nav).forEach(function (a) { a.addEventListener("click", function () { nav.classList.remove("open"); menuBtn.setAttribute("aria-expanded", "false"); menuBtn.textContent = "Menu"; }); });
+    $$("a", nav).forEach(function (a) { a.addEventListener("click", function () { nav.classList.remove("open"); menuBtn.setAttribute("aria-expanded", "false"); menuBtn.textContent = "Menu"; closeGroups(); }); });
   }
+  // Dropdown groups (Events, Media): click or keyboard to open, Escape or outside click to close
+  var groups = $$(".nav-group");
+  function closeGroups(except) {
+    groups.forEach(function (g) {
+      if (g === except) return;
+      g.classList.remove("open");
+      var b = $(".nav-top", g); if (b) b.setAttribute("aria-expanded", "false");
+    });
+  }
+  groups.forEach(function (g) {
+    var b = $(".nav-top", g);
+    if (!b) return;
+    b.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var open = !g.classList.contains("open");
+      closeGroups(g);
+      g.classList.toggle("open", open);
+      b.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+  document.addEventListener("click", function (e) { if (!e.target.closest || !e.target.closest(".nav-group")) closeGroups(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    var g = groups.filter(function (x) { return x.classList.contains("open"); })[0];
+    closeGroups();
+    if (g) { var b = $(".nav-top", g); if (b) b.focus(); }
+  });
 
   // Single-file preview: one page at a time, routed by #hash
   var spa = document.querySelector("[data-spa]");
@@ -60,7 +87,7 @@
         var target = (a.getAttribute("href") || "").replace("#", "") || "home";
         if (target === name) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
       });
-      var t = { home: "That's Just Good", "team-building": "Team Building", community: "Community Events", kids: "Kids Events", podcast: "Podcast", about: "About", contact: "Contact" }[name];
+      var t = { home: "That's Just Good", "team-building": "Team Building", community: "Community Pop-Ups", kids: "Schools & Kids", partners: "Impact Partners", "impact-hub": "My Impact Hub", podcast: "Podcast", books: "Books", about: "About", contact: "Contact" }[name];
       if (t && name !== "home") document.title = t + " | That's Just Good"; else document.title = "That's Just Good";
       if (anchor) anchor.scrollIntoView();
       else if (h && names.indexOf(h) > -1) window.scrollTo(0, 0);
