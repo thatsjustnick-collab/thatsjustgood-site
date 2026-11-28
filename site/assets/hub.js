@@ -72,6 +72,10 @@ function mark(tab) { $$("[data-tab]").forEach((a) => a.toggleAttribute("aria-cur
 function signinView(next) {
   chrome(false);
   const live = sb != null;
+  if (!live && !/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+    app.innerHTML = `<div class="signin card"><span class="pill sky">Coming soon</span><h1>My Impact Hub is almost ready</h1><p class="muted">We're putting the finishing touches on it. Join the waitlist and we'll invite you as soon as it opens.</p><div><a class="btn" href="https://thatsjustgood.com/impact-hub#waitlist">Join the waitlist</a></div></div>`;
+    return;
+  }
   app.innerHTML = `<div class="signin card">
     <h1>Sign in to My Impact Hub</h1>
     <p class="muted">${live ? "Enter your email and we'll send you a link to sign in. New here? The same link creates your free account." : "Test mode: the Hub isn't connected to its database yet, so anything you add is temporary."}</p>
