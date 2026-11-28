@@ -8,6 +8,7 @@ import { createCheckout, readWebhook, paymentsLive } from "../lib/payments.mjs";
 import { CHIP_IN_CENTS, money } from "../lib/pricing.mjs";
 import * as svc from "../lib/services.mjs";
 import * as mail from "../lib/emails.mjs";
+import { registerHubRoutes } from "../lib/hub.mjs";
 
 const routes = [];
 const on = (method, pattern, handler) => {
@@ -371,6 +372,8 @@ admin("DELETE", "/api/admin/team/:uid", "team", async (req, { uid }, { member })
 });
 
 admin("POST", "/api/admin/run-reminders", "manage", async () => json(await svc.runReminders()));
+
+registerHubRoutes(on, admin);
 
 /* ---------------- Router ---------------- */
 export default async (req) => {

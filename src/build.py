@@ -354,8 +354,8 @@ def stamp_assets():
     after a deploy. The fingerprint only changes when the file does."""
     import hashlib, glob
     files = {name: hashlib.md5(open(os.path.join(SITE, "assets", name), "rb").read()).hexdigest()[:8]
-             for name in ("style.css", "site.js", "app.js", "admin.js")}
-    for path in glob.glob(os.path.join(SITE, "*.html")):
+             for name in ("style.css", "site.js", "app.js", "admin.js", "hub.js", "hub.css")}
+    for path in glob.glob(os.path.join(SITE, "*.html")) + glob.glob(os.path.join(SITE, "hub", "*.html")):
         text = open(path, encoding="utf-8").read()
         for name, h in files.items():
             text = text.replace(f'"/assets/{name}"', f'"/assets/{name}?v={h}"')
@@ -372,6 +372,11 @@ def build_site():
     shutil.copy(os.path.join(HERE, "admin.js"), os.path.join(SITE, "assets", "admin.js"))
     shutil.copy(os.path.join(HERE, "admin.html"), os.path.join(SITE, "admin.html"))
     shutil.copy(os.path.join(ROOT, "netlify", "lib", "pricing.mjs"), os.path.join(SITE, "assets", "pricing.js"))
+    # My Impact Hub app (served at hub.thatsjustgood.com)
+    os.makedirs(os.path.join(SITE, "hub"), exist_ok=True)
+    shutil.copy(os.path.join(HERE, "hub", "index.html"), os.path.join(SITE, "hub", "index.html"))
+    shutil.copy(os.path.join(HERE, "hub", "hub.js"), os.path.join(SITE, "assets", "hub.js"))
+    shutil.copy(os.path.join(HERE, "hub", "hub.css"), os.path.join(SITE, "assets", "hub.css"))
     for slug, fname, _label, title, desc in PAGES:
         body = fill(read("pages", slug + ".html"), "site")
         url = DOMAIN + ("/" if slug == "home" else "/" + fname.replace(".html", ""))

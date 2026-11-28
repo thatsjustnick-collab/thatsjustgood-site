@@ -127,3 +127,105 @@ alter table feedback enable row level security;
 insert into storage.buckets (id, name, public)
 values ('event-photos', 'event-photos', true)
 on conflict (id) do nothing;
+
+-- ================= My Impact Hub =================
+-- Everyone who uses the Hub. The id is their sign-in account.
+create table if not exists hub_profiles (
+  id uuid primary key references auth.users (id) on delete cascade,
+  email text not null,
+  name text not null,
+  grad_year int,
+  plan text not null default 'free' check (plan in ('free', 'verified')),   -- verified = Verified Student ($39/yr)
+  plan_until date,
+  age_ok boolean not null default false,                                      -- confirmed 13 or older
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create unique index if not exists hub_profiles_email on hub_profiles (lower(email));
+
+-- Clubs, chapters, schools, companies and other groups.
+create table if not exists hub_groups (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  kind text not null default 'club' check (kind in ('club', 'chapter', 'school', 'company', 'nonprofit', 'faith', 'team', 'other')),
+  join_code text not null unique,
+  plan text not null default 'starter' check (plan in ('starter', 'group', 'group_plus', 'network', 'team', 'business', 'business_plus', 'enterprise')),
+  goal_hours numeric,
+  goal_label text,                                 -- e.g. "Fall semester"
+  goal_ends date,
+  per_member_hours numeric,                        -- requirement for each member, optional
+  email_domain text,                               -- e.g. lincolnisd.org: matching emails join automatically
+  created_by uuid references hub_profiles (id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists hub_members (
+  id uuid primary key default gen_random_uuid(),
+  group_id uuid not null references hub_groups (id) on delete cascade,
+  profile_id uuid not null references hub_profiles (id) on delete cascade,
+  role text not null default 'member' check (role in ('leader', 'member')),
+  status text not null default 'active' check (status in ('active', 'removed')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (group_id, profile_id)
+);
+
+-- Every logged activity. Supervisors confirm by email; group leaders approve for their group.
+create table if not exists hub_entries (
+  id uuid primary key default gen_random_uuid(),
+  profile_id uuid not null references hub_profiles (id) on delete cascade,
+  group_id uuid references hub_groups (id) on delete set null,
+  activity text not null,
+  org_name text,
+  cause text,
+  date date not null,
+  hours numeric not null check (hours > 0 and hours <= 24),
+  reflection text,
+  photo_url text,
+  supervisor_name text,
+  supervisor_email text,
+  verify_token text unique,
+  status text not null default 'unverified' check (status in ('unverified', 'awaiting_supervisor', 'verified', 'declined')),
+  verified_at timestamptz,
+  approval text check (approval in ('approved', 'returned')),
+  approved_at timestamptz,
+  approved_by uuid,
+  return_note text,
+  honor boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create index if not exists hub_entries_profile on hub_entries (profile_id, date);
+create index if not exists hub_entries_group on hub_entries (group_id, date);
+
+-- Verified transcripts: a frozen copy anyone can check with its code.
+create table if not exists hub_transcripts (
+  id uuid primary key default gen_random_uuid(),
+  profile_id uuid not null references hub_profiles (id) on delete cascade,
+  code text not null unique,
+  snapshot jsonb not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- Website leads: Hub waitlist, Impact Partners inquiries and contact messages.
+create table if not exists leads (
+  id uuid primary key default gen_random_uuid(),
+  kind text not null check (kind in ('hub_waitlist', 'partners', 'contact')),
+  name text,
+  email text not null,
+  organization text,
+  details jsonb not null default '{}'::jsonb,
+  status text not null default 'new' check (status in ('new', 'contacted', 'invited', 'won', 'lost')),
+  notes text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table hub_profiles enable row level security;
+alter table hub_groups enable row level security;
+alter table hub_members enable row level security;
+alter table hub_entries enable row level security;
+alter table hub_transcripts enable row level security;
+alter table leads enable row level security;

@@ -149,7 +149,12 @@
       }
       var btn = $("button[type=submit]", form); if (btn) btn.disabled = true;
       fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(new FormData(form)).toString() })
-        .then(function (r) { if (!r.ok) throw new Error(r.status); form.reset(); status.textContent = form.getAttribute("data-thanks") || "Thanks! We got your message and will be in touch soon."; })
+        .then(function (r) {
+          if (!r.ok) throw new Error(r.status);
+          // Also save it to the dashboard's Leads list (best effort; the email from Netlify Forms is the backup)
+          try { fetch("/api/leads", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(form))) }).catch(function () {}); } catch (e) {}
+          form.reset(); status.textContent = form.getAttribute("data-thanks") || "Thanks! We got your message and will be in touch soon.";
+        })
         .catch(function () { status.textContent = "That didn't send. Please email us at dogood@thatsjustgood.com instead."; })
         .then(function () { if (btn) btn.disabled = false; });
     });

@@ -81,8 +81,8 @@ function route() {
   document.querySelectorAll("#tabs a").forEach((a) => a.toggleAttribute("aria-current", h.startsWith(a.getAttribute("href").slice(1).replace(/s$/, ""))));
   document.querySelectorAll("#tabs a").forEach((a) => { if (a.hasAttribute("aria-current")) a.setAttribute("aria-current", "page"); });
   window.scrollTo(0, 0);
-  const [name, id] = h.split(/-(.+)/);
-  const fn = { overview, events: eventsView, event: eventView, "new": () => eventForm(), edit: () => eventForm(id), checkin: () => checkinView(id), bookings: bookingsView, booking: () => bookingView(id), team: teamView }[name];
+  const [name, id] = h.split("?")[0].split(/-(.+)/);
+  const fn = { overview, events: eventsView, event: eventView, "new": () => eventForm(), edit: () => eventForm(id), checkin: () => checkinView(id), bookings: bookingsView, booking: () => bookingView(id), team: teamView, leads: leadsView, hub: hubAdminView }[name];
   (fn || overview)(id).catch((e) => { view.innerHTML = `<div class="alert error">${esc(e.message)}</div>`; });
 }
 
@@ -436,3 +436,61 @@ async function teamView() {
 }
 
 boot();
+
+
+/* ---------------- Leads: Hub waitlist, Impact Partners inquiries, contact messages ---------------- */
+const LEAD_KIND = { hub_waitlist: "Hub waitlist", partners: "Impact Partners", contact: "Contact form" };
+const LEAD_STATUS = ["new", "contacted", "invited", "won", "lost"];
+async function leadsView() {
+  view.innerHTML = `<p class="app-loading">Loading…</p>`;
+  const { leads } = await api("/api/admin/leads");
+  const filter = new URLSearchParams(location.hash.split("?")[1] || "").get("kind") || "all";
+  const shown = leads.filter((l) => filter === "all" || l.kind === filter);
+  const count = (k) => leads.filter((l) => l.kind === k && l.status === "new").length;
+  view.innerHTML = `<div class="stack-lg">
+    <div><h1>Leads</h1><p class="muted">Everyone who filled out a form on the website. New ones are highlighted.</p></div>
+    <div class="row-actions">${[["all", "All"], ["partners", "Impact Partners"], ["hub_waitlist", "Hub waitlist"], ["contact", "Contact form"]].map(([k, l]) => `<a class="btn small ${filter === k ? "" : "ghost"}" href="#leads?kind=${k}">${l}${k !== "all" && count(k) ? ` (${count(k)} new)` : ""}</a>`).join("")}</div>
+    ${shown.length ? `<div class="stack">${shown.map((l) => `<div class="card" data-lead="${l.id}">
+      <div class="row-actions" style="justify-content:space-between"><div><b>${esc(l.name || l.email)}</b>${l.organization ? ` · ${esc(l.organization)}` : ""}<br><span class="muted-s">${esc(LEAD_KIND[l.kind])} · ${esc(dateShort(l.created_at))} · <a href="mailto:${esc(l.email)}">${esc(l.email)}</a></span></div>
+        <div class="row-actions"><select class="ls" aria-label="Status">${LEAD_STATUS.map((st) => `<option value="${st}" ${st === l.status ? "selected" : ""}>${st[0].toUpperCase() + st.slice(1)}</option>`).join("")}</select>
+        ${l.kind === "hub_waitlist" && can("manage") ? `<button class="btn small" type="button" data-invite>${l.status === "invited" ? "Invite again" : "Invite to the Hub"}</button>` : ""}</div></div>
+      ${Object.keys(l.details || {}).length ? `<dl class="facts">${Object.entries(l.details).map(([k, v]) => `<div><dt>${esc(k.replace(/_/g, " "))}</dt><dd class="v">${esc(v)}</dd></div>`).join("")}</dl>` : ""}
+      <div class="field"><label>Notes</label><textarea class="ln" rows="2">${esc(l.notes || "")}</textarea></div>
+    </div>`).join("")}</div>` : `<div class="card"><p>No leads here yet. They show up as soon as someone fills out a form on the website.</p></div>`}
+  </div>`;
+  document.querySelectorAll("[data-lead]").forEach((card) => {
+    const id = card.dataset.lead;
+    card.querySelector(".ls").addEventListener("change", async (e) => { try { await api(`/api/admin/leads/${id}`, { method: "PATCH", body: { status: e.target.value } }); toast("Status saved"); } catch (err) { toast(err.message); } });
+    card.querySelector(".ln").addEventListener("change", async (e) => { try { await api(`/api/admin/leads/${id}`, { method: "PATCH", body: { notes: e.target.value } }); toast("Notes saved"); } catch (err) { toast(err.message); } });
+    card.querySelector("[data-invite]")?.addEventListener("click", async (e) => { busy(e.target, true, "Sending…"); try { await api(`/api/admin/leads/${id}/invite`, { method: "POST" }); toast("Invite sent"); leadsView(); } catch (err) { busy(e.target, false); toast(err.message); } });
+  });
+}
+
+/* ---------------- My Impact Hub ---------------- */
+async function hubAdminView() {
+  view.innerHTML = `<p class="app-loading">Loading…</p>`;
+  const h = await api("/api/admin/hub");
+  view.innerHTML = `<div class="stack-lg">
+    <div class="row-actions" style="justify-content:space-between"><h1>My Impact Hub</h1><a class="btn ghost small" href="/hub" target="_blank" rel="noopener">Open the Hub</a></div>
+    <div class="adm-grid">
+      <div class="kpi"><b>${h.stats.people}</b><span>people</span></div>
+      <div class="kpi"><b>${h.stats.groups}</b><span>groups (${h.stats.paid_groups} paid)</span></div>
+      <div class="kpi"><b>${h.stats.verified_hours}</b><span>verified hours</span></div>
+      <div class="kpi"><b>${h.stats.hours_this_month}</b><span>hours logged this month</span></div>
+      <div class="kpi"><b>${h.stats.verified_students}</b><span>Verified Students</span></div>
+    </div>
+    <div class="stack"><h2 style="font-size:1.3rem">Groups</h2>
+    ${h.groups.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>Group</th><th>Type</th><th class="num">Members</th><th class="num">Approved hours</th><th>Join code</th><th>Plan</th></tr></thead><tbody>
+      ${h.groups.map((g) => `<tr><td><b>${esc(g.name)}</b><br><span class="muted-s">Started ${esc(dateShort(g.created_at))}</span></td><td>${esc(g.kind)}</td><td class="num">${g.members}</td><td class="num">${g.hours}</td><td><code>${esc(g.join_code)}</code></td>
+        <td>${can("manage") ? `<select data-gplan="${g.id}" aria-label="Plan for ${esc(g.name)}">${Object.entries(h.plans).map(([k, v]) => `<option value="${k}" ${k === g.plan ? "selected" : ""}>${esc(v)}</option>`).join("")}</select>` : esc(g.plan_label)}</td></tr>`).join("")}
+    </tbody></table></div>` : `<div class="card"><p>No groups yet.</p></div>`}</div>
+    <div class="stack"><h2 style="font-size:1.3rem">People</h2>
+    ${h.people.length ? `<div class="table-wrap"><table class="table"><thead><tr><th>Name</th><th class="num">Verified hours</th><th class="num">Groups</th><th>Joined</th><th>Plan</th></tr></thead><tbody>
+      ${h.people.map((p) => `<tr><td><b>${esc(p.name)}</b><br><span class="muted-s">${esc(p.email)}</span></td><td class="num">${p.hours}</td><td class="num">${p.groups}</td><td>${esc(dateShort(p.created_at))}</td>
+        <td>${can("manage") ? `<select data-pplan="${p.id}" aria-label="Plan for ${esc(p.name)}"><option value="free" ${p.plan === "free" ? "selected" : ""}>Personal (free)</option><option value="verified" ${p.plan === "verified" ? "selected" : ""}>Verified Student</option></select>` : esc(p.plan)}</td></tr>`).join("")}
+    </tbody></table></div>` : `<div class="card"><p>No one has signed up yet.</p></div>`}</div>
+    <p class="muted-s">Plans are set here by hand until online billing is added. Changing a group to a paid plan turns on verified transcripts for its members and raises its member and leader limits.</p>
+  </div>`;
+  document.querySelectorAll("[data-gplan]").forEach((sel) => sel.addEventListener("change", async () => { try { await api(`/api/admin/hub/groups/${sel.dataset.gplan}`, { method: "PATCH", body: { plan: sel.value } }); toast("Plan updated"); } catch (e) { toast(e.message); } }));
+  document.querySelectorAll("[data-pplan]").forEach((sel) => sel.addEventListener("change", async () => { try { await api(`/api/admin/hub/people/${sel.dataset.pplan}`, { method: "PATCH", body: { plan: sel.value } }); toast("Plan updated"); } catch (e) { toast(e.message); } }));
+}

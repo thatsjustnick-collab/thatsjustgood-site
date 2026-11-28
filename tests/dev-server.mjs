@@ -11,7 +11,7 @@ const { default: api } = await import("../netlify/functions/api.mjs");
 const { getOutbox } = await import("../netlify/lib/notify.mjs");
 
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".png": "image/png", ".jpg": "image/jpeg", ".ico": "image/x-icon", ".json": "application/json", ".xml": "application/xml", ".txt": "text/plain", ".webmanifest": "application/manifest+json" };
-const REWRITES = [[/^\/events\/[^/]+$/, "/event.html"], [/^\/rsvp\/[^/]+$/, "/rsvp.html"], [/^\/team\/[^/]+$/, "/team.html"], [/^\/report\/[^/]+$/, "/report.html"], [/^\/certificate\/[^/]+$/, "/certificate.html"], [/^\/checkin\/[^/]+$/, "/checkin.html"]];
+const REWRITES = [[/^\/events\/[^/]+$/, "/event.html"], [/^\/rsvp\/[^/]+$/, "/rsvp.html"], [/^\/team\/[^/]+$/, "/team.html"], [/^\/report\/[^/]+$/, "/report.html"], [/^\/certificate\/[^/]+$/, "/certificate.html"], [/^\/checkin\/[^/]+$/, "/checkin.html"], [/^\/hub(\/.*)?$/, "/hub/index.html"]];
 
 async function serveFile(path, res) {
   let p = path;

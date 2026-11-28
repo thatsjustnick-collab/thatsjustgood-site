@@ -1,4 +1,4 @@
-# Turning on the events system
+# Turning on the events system and My Impact Hub
 
 The events system (RSVPs, the team building planner, deposits, reminders, check-in, impact reports and the dashboard)
 is built and deployed. It switches on when these three services are connected. Until then:
@@ -15,9 +15,9 @@ Keys never go in this repository or in a chat. They go only into Netlify (step 4
    [`supabase/schema.sql`](supabase/schema.sql), and click **Run**.
 3. Set the sign-in links: https://supabase.com/dashboard/project/_/auth/url-configuration
    - Site URL: `https://thatsjustgood.com`
-   - Redirect URLs: add `https://thatsjustgood.com/admin`
-4. Stop strangers from creating accounts: https://supabase.com/dashboard/project/_/auth/providers, open **Email**, turn
-   **Allow new users to sign up** off. (Team members you invite from the dashboard still get in.)
+   - Redirect URLs: add `https://thatsjustgood.com/admin`, `https://hub.thatsjustgood.com/**` and `https://thatsjustgood.com/hub/**`
+4. Let people create Hub accounts: https://supabase.com/dashboard/project/_/auth/providers, open **Email**, and make sure
+   **Allow new users to sign up** is **on**. The dashboard stays private: only people on your Team list can open it.
 5. Copy the keys from https://supabase.com/dashboard/project/_/settings/api-keys: the **Project URL**,
    the **publishable (anon) key** and the **secret (service_role) key**.
 
@@ -57,7 +57,17 @@ Add each at https://app.netlify.com/projects/thatsjustgoodwebsite/configuration/
 
 Then redeploy: https://app.netlify.com/projects/thatsjustgoodwebsite/deploys, **Trigger deploy → Deploy site**.
 
-## 5. Sign in
+## 5. Point hub.thatsjustgood.com at the site
+
+1. In Netlify, add the address: https://app.netlify.com/projects/thatsjustgoodwebsite/domain-management, click
+   **Add a domain alias**, enter `hub.thatsjustgood.com`, and save.
+2. In GoDaddy, add one DNS record: https://dcc.godaddy.com/control/portfolio/thatsjustgood.com/settings?subtab=dns,
+   click **Add New Record**, choose **CNAME**, Name `hub`, Value `thatsjustgoodwebsite.netlify.app`, and save.
+3. Back in Netlify's domain page, wait for the HTTPS certificate to show as active (usually under an hour).
+
+Until then, the Hub also works at https://thatsjustgood.com/hub.
+
+## 6. Sign in
 
 Go to https://thatsjustgood.com/admin, enter the email from `ADMIN_EMAILS`, and click the link in your inbox.
 
@@ -72,4 +82,5 @@ Go to https://thatsjustgood.com/admin, enter the email from `ADMIN_EMAILS`, and 
 | Hourly reminders | `netlify/functions/reminders.mjs` |
 | Public pages | `src/app.js`, `src/pages/` |
 | Dashboard | `src/admin.html`, `src/admin.js` |
+| Impact Hub app | `src/hub/` (screens), `netlify/lib/hub.mjs` (server), `netlify/lib/badges.mjs` (badges) |
 | Tests | `npm test` (all flows, no outside services needed) and `node tests/dev-server.mjs 8888 --seed` for a local copy |

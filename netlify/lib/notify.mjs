@@ -68,7 +68,7 @@ export function layout({ preheader = "", heading, body, cta, ctaUrl, footerNote 
 ${cta ? `<p style="margin:26px 0 6px"><a href="${ctaUrl}" style="background:${C.coral};color:${C.navy};text-decoration:none;font-weight:bold;padding:14px 22px;border-radius:999px;display:inline-block">${esc(cta)}</a></p>` : ""}
 </td></tr>
 <tr><td style="padding:18px 28px;background:${C.cloud};font-size:13px;line-height:1.5;color:${C.slate}">
-${footerNote ? footerNote + "<br><br>" : ""}That's Just Good · Show up. Do good. Tell the story.<br>
+${footerNote ? footerNote + "<br><br>" : ""}That's Just Good · Do good together. See it add up.<br>
 Questions? Reply to this email or write <a href="mailto:dogood@thatsjustgood.com" style="color:${C.slate}">dogood@thatsjustgood.com</a>.
 </td></tr></table></td></tr></table></body></html>`;
 }
