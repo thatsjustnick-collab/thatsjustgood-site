@@ -19,9 +19,9 @@ PAGES = [
     ("kids", "kids.html", "School Reading Visits", "Nico Makes A Difference School & Kids Events | That's Just Good",
      "Nico Makes A Difference reading visits for schools, daycares, libraries and youth programs: a story, a conversation and a hands-on kindness activity."),
     ("partners", "partners.html", "For Companies", "Corporate Impact Partners & the Good Council | That's Just Good",
-     "Join the Corporate Good Council or hire That's Just Good to design and run your company's giving and volunteering program, from team events to company-wide Days of Service."),
+     "Join the Corporate Good Council or hire That's Just Good to design and run your company's volunteer program, from team events to company-wide Days of Service."),
     ("impact-hub", "impact-hub.html", "Impact Hub", "My Impact Hub: Volunteer Hour Tracking for Groups, Students & Companies",
-     "Track volunteer hours, donations and goals for NHS chapters, clubs, Greek life, companies and students. Verified transcripts, awards, badges and an annual Impact Unwrapped. Join the waitlist."),
+     "Track volunteer hours and goals for NHS chapters, clubs, Greek life, companies and students. Verified transcripts, awards, badges and an annual Impact Unwrapped. Join the waitlist."),
     ("podcast", "podcast.html", "Podcast", "That's Just Good Podcast with Nick Marino Jr.",
      "Nick Marino Jr. talks with founders, nonprofit leaders and everyday changemakers about doing good in their communities. Listen on Spotify, Apple and YouTube."),
     ("books", "books.html", "Books", "Nico Makes A Difference Children's Books by Nick Marino Jr.",
@@ -48,7 +48,7 @@ NAV_DESC = {
     "community": "Free volunteer events anyone can join",
     "team-building": "A volunteer event just for your team",
     "kids": "Nico story time and a kindness activity",
-    "partners": "Year-round giving and volunteer programs",
+    "partners": "Year-round volunteer programs",
     "podcast": "Conversations with people doing good",
     "books": "Nico Makes A Difference for kids",
 }
@@ -208,7 +208,7 @@ def structured_data(slug, url, title, desc):
                       "description": desc, "publisher": {"@id": DOMAIN + "/#org"},
                       "featureList": ["Volunteer hour tracking", "Supervisor verification", "Verified service transcripts",
                                       "Awards and scholarship tracking", "Badges", "Impact Unwrapped annual recap",
-                                      "Group goals and approvals", "Events and QR check-in", "Corporate gift matching"],
+                                      "Group goals and approvals", "Events and QR check-in", "Company volunteer challenges"],
                       "offers": [usd("Personal", "0"), usd("Verified Student", "39", description="Per year"),
                                  usd("Starter Group", "0"), usd("Group", "19", description="Per month"),
                                  usd("Group Plus", "49", description="Per month"), usd("Network", "99", description="Per month"),
@@ -216,12 +216,12 @@ def structured_data(slug, url, title, desc):
                                  usd("Company Business", "299", description="Per month, up to 250 employees"),
                                  usd("Company Business Plus", "599", description="Per month, up to 1,000 employees")]})
     if slug == "partners":
-        graph.append({"@type": "Service", "name": "Impact Partners", "serviceType": "Corporate philanthropy and employee volunteering programs",
+        graph.append({"@type": "Service", "name": "Impact Partners", "serviceType": "Employee volunteering and community engagement programs",
                       "provider": {"@id": DOMAIN + "/#org"}, "areaServed": "United States", "url": url, "description": desc,
                       "offers": [usd("The Good Council", "25000", description="Per year"),
-                                 usd("Impact Build", "18000", description="One time, 6 to 8 weeks"),
-                                 usd("Impact Partner Core", "60000", description="Per year, up to 500 employees"),
-                                 usd("Impact Partner Growth", "120000", description="Per year, up to 2,000 employees")]})
+                                 usd("Impact Build", "7500", description="One time, 4 to 6 weeks"),
+                                 usd("Impact Partner Core", "40000", description="Per year, up to 500 employees"),
+                                 usd("Impact Partner Growth", "75000", description="Per year, up to 2,000 employees")]})
     if slug == "books":
         graph.append({"@type": "BookSeries", "name": "Nico Makes A Difference", "url": url, "description": desc,
                       "author": {"@id": FOUNDER["@id"]}, "publisher": {"@id": DOMAIN + "/#org"},
@@ -266,7 +266,7 @@ def llms_txt():
         "together to do good through three pillars: Events, Technology and Media.", "",
         "- Events: free community pop-up volunteer events, private team building impact events for companies, "
         "Nico Makes A Difference reading visits for schools and kids, and Impact Partners programs for companies.",
-        "- Technology: My Impact Hub, a platform for tracking volunteer hours, donations, goals, awards and badges for "
+        "- Technology: My Impact Hub, a platform for tracking volunteer hours, goals, awards and badges for "
         "students, groups and companies, with verified transcripts and an annual Impact Unwrapped recap. Free for individuals.",
         "- Media: the That's Just Good Podcast hosted by Nick Marino Jr., and the Nico Makes A Difference children's book series.",
         "",
@@ -274,8 +274,8 @@ def llms_txt():
         "- Team building Host Only pricing: $1,250 for 90 minutes, $1,500 for 120 minutes, $2,000 for up to 180 minutes.",
         "- My Impact Hub pricing: Personal free; Verified Student $39 a year; Starter Group free; Group $19 a month; "
         "Group Plus $49 a month; Network $99 a month; Company plans from $99 a month. Currently taking a waitlist.",
-        "- Impact Partners: The Good Council $25,000 a year; Impact Build $18,000; Impact Partner Core $60,000 a year; "
-        "Impact Partner Growth $120,000 a year; Enterprise from $200,000 a year.",
+        "- Impact Partners: The Good Council $25,000 a year; Impact Build $7,500; Impact Partner Core $40,000 a year; "
+        "Impact Partner Growth $75,000 a year; Enterprise custom. That's Just Good does not run gift matching or donation programs.",
         "- Contact: dogood@thatsjustgood.com. Based in Dallas-Fort Worth, Texas. Events anywhere.",
         "", "## Pages", "",
     ]
