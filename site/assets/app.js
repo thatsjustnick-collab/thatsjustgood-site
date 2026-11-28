@@ -1,6 +1,6 @@
 // That's Just Good events: calendar, event pages, RSVPs, the team building planner, booking status,
 // company team pages, impact reports and certificates. Talks to the site's /api.
-import { estimate, earliestDate, validateBooking, RULES, DURATIONS, CAUSES, money } from "/assets/pricing.js";
+import { estimate, earliestDate, validateBooking, RULES, DURATIONS, CAUSES, money } from "/assets/pricing.js?v=3adc68264d";
 
 const TZ = "America/Chicago";
 const $ = (s, r = document) => r.querySelector(s);

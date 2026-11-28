@@ -349,6 +349,19 @@ def build_extras():
         f.write(doc)
 
 
+def stamp_assets():
+    """Adds a content fingerprint to CSS and JS links (style.css?v=ab12cd34) so phones never keep an old copy
+    after a deploy. The fingerprint only changes when the file does."""
+    import hashlib, glob
+    files = {name: hashlib.md5(open(os.path.join(SITE, "assets", name), "rb").read()).hexdigest()[:8]
+             for name in ("style.css", "site.js", "app.js", "admin.js")}
+    for path in glob.glob(os.path.join(SITE, "*.html")):
+        text = open(path, encoding="utf-8").read()
+        for name, h in files.items():
+            text = text.replace(f'"/assets/{name}"', f'"/assets/{name}?v={h}"')
+        open(path, "w", encoding="utf-8").write(text)
+
+
 def build_site():
     # Rebuilds pages and assets; never touches photos you've added to site/images
     os.makedirs(os.path.join(SITE, "assets"), exist_ok=True)
@@ -446,6 +459,7 @@ def build_site():
     if os.path.exists(old_share):
         os.remove(old_share)
     build_extras()
+    stamp_assets()
 
 
 def build_preview():
@@ -477,7 +491,26 @@ def build_preview():
         f.write(doc)
 
 
+def bust_caches():
+    """Stamp asset links with a content hash so phones never pair a new page with an old stylesheet or script."""
+    import hashlib, glob, re
+    stamp = {}
+    for name in ("style.css", "site.js", "app.js", "admin.js", "pricing.js"):
+        f = os.path.join(SITE, "assets", name)
+        if os.path.exists(f):
+            stamp[name] = hashlib.sha1(open(f, "rb").read()).hexdigest()[:10]
+    for f in glob.glob(os.path.join(SITE, "*.html")) + [os.path.join(SITE, "assets", "app.js"), os.path.join(SITE, "assets", "admin.js")]:
+        if not os.path.exists(f):
+            continue
+        t = open(f, encoding="utf-8").read()
+        t2 = re.sub(r"(/assets/|\./)(style\.css|site\.js|app\.js|admin\.js|pricing\.js)(\?v=[0-9a-f]+)?",
+                    lambda m: f"{m.group(1)}{m.group(2)}?v={stamp.get(m.group(2), '0')}", t)
+        if t2 != t:
+            open(f, "w", encoding="utf-8").write(t2)
+
+
 if __name__ == "__main__":
     build_site()
+    bust_caches()
     build_preview()
     print("built", SITE, PREVIEW)

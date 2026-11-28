@@ -1,5 +1,5 @@
 // That's Just Good dashboard: events, RSVPs, check-in, impact reports, bookings and team.
-import { money, CAUSES } from "/assets/pricing.js";
+import { money, CAUSES } from "/assets/pricing.js?v=3adc68264d";
 
 const TZ = "America/Chicago";
 const $ = (s, r = document) => r.querySelector(s);
