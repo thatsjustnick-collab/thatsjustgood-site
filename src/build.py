@@ -218,9 +218,9 @@ def structured_data(slug, url, title, desc):
     if slug == "partners":
         graph.append({"@type": "Service", "name": "Impact Partners", "serviceType": "Employee volunteering and community engagement programs",
                       "provider": {"@id": DOMAIN + "/#org"}, "areaServed": "United States", "url": url, "description": desc,
-                      "offers": [usd("The Good Council", "25000", description="Per year, billed yearly: $2,083 a month"),
+                      "offers": [usd("The Good Council", "25000", description="Per year"),
                                  usd("Impact Build", "7500", description="One time, 4 to 6 weeks"),
-                                 usd("Impact Partner Core", "40000", description="Per year, billed yearly: $3,333 a month, up to 500 employees"),
+                                 usd("Impact Partner Core", "40200", description="Per year, billed yearly: $3,350 a month, up to 500 employees"),
                                  usd("Impact Partner Growth", "75000", description="Per year, billed yearly: $6,250 a month, up to 2,000 employees")]})
     if slug == "books":
         graph.append({"@type": "BookSeries", "name": "Nico Makes A Difference", "url": url, "description": desc,
@@ -274,8 +274,8 @@ def llms_txt():
         "- Team building Host Only pricing: $1,250 for 90 minutes, $1,500 for 120 minutes, $2,000 for up to 180 minutes.",
         "- My Impact Hub pricing: Personal free; Verified Student $39 a year; Starter Group free; Group $19 a month; "
         "Group Plus $49 a month; Network $99 a month; Company plans from $99 a month. Currently taking a waitlist.",
-        "- Impact Partners (billed yearly): The Good Council $2,083 a month ($25,000 a year); Impact Build $7,500 one time; "
-        "Impact Partner Core $3,333 a month ($40,000 a year); Impact Partner Growth $6,250 a month ($75,000 a year); Enterprise custom. That's Just Good does not run gift matching or donation programs.",
+        "- Impact Partners (billed yearly): The Good Council $25,000 a year; Impact Build $7,500 one time; "
+        "Impact Partner Core $3,350 a month ($40,200 a year); Impact Partner Growth $6,250 a month ($75,000 a year); Enterprise custom. That's Just Good does not run gift matching or donation programs.",
         "- Contact: dogood@thatsjustgood.com. Based in Dallas-Fort Worth, Texas. Events anywhere.",
         "", "## Pages", "",
     ]
