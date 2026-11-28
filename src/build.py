@@ -220,8 +220,8 @@ def structured_data(slug, url, title, desc):
                       "provider": {"@id": DOMAIN + "/#org"}, "areaServed": "United States", "url": url, "description": desc,
                       "offers": [usd("The Good Council", "25000", description="Per year"),
                                  usd("Impact Build", "7500", description="One time, 4 to 6 weeks"),
-                                 usd("Impact Partner Core", "40200", description="Per year, billed yearly: $3,350 a month, up to 500 employees"),
-                                 usd("Impact Partner Growth", "75000", description="Per year, billed yearly: $6,250 a month, up to 2,000 employees")]})
+                                 usd("Impact Partner Core", "42000", description="Per year, billed yearly: $3,500 a month, up to 500 employees"),
+                                 usd("Impact Partner Growth", "78000", description="Per year, billed yearly: $6,500 a month, up to 2,000 employees")]})
     if slug == "books":
         graph.append({"@type": "BookSeries", "name": "Nico Makes A Difference", "url": url, "description": desc,
                       "author": {"@id": FOUNDER["@id"]}, "publisher": {"@id": DOMAIN + "/#org"},
@@ -275,7 +275,7 @@ def llms_txt():
         "- My Impact Hub pricing: Personal free; Verified Student $39 a year; Starter Group free; Group $19 a month; "
         "Group Plus $49 a month; Network $99 a month; Company plans from $99 a month. Currently taking a waitlist.",
         "- Impact Partners (billed yearly): The Good Council $25,000 a year; Impact Build $7,500 one time; "
-        "Impact Partner Core $3,350 a month ($40,200 a year); Impact Partner Growth $6,250 a month ($75,000 a year); Enterprise custom. That's Just Good does not run gift matching or donation programs.",
+        "Impact Partner Core $3,500 a month ($42,000 a year); Impact Partner Growth $6,500 a month ($78,000 a year); Enterprise custom. That's Just Good does not run gift matching or donation programs.",
         "- Contact: dogood@thatsjustgood.com. Based in Dallas-Fort Worth, Texas. Events anywhere.",
         "", "## Pages", "",
     ]

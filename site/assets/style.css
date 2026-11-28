@@ -635,3 +635,4 @@ h2 { font-size: clamp(1.7rem, 3.2vw, 2.5rem); }
   .nav > a:not(.btn) { margin-top: 0; }
 }
 @media (max-width: 980px) { .nav-group + a:not(.btn), a:not(.btn) + .nav-group, .nav-group + .nav-group { border-radius: 0; } }
+.tier .amount small { line-height: 1.35; }
