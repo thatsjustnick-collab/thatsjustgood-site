@@ -12,13 +12,13 @@ PAGES = [
     # slug, file, nav label, <title>, meta description
     ("home", "index.html", None, "That's Just Good | Do Good Together. See It Add Up.",
      "That's Just Good brings people together to do good: impact events for companies, schools and communities, the My Impact Hub platform, and a podcast and books in Dallas-Fort Worth."),
-    ("community", "community.html", "Community Pop-Ups", "Community Pop-Up Volunteer Events | That's Just Good",
+    ("community", "community.html", "Free Community Events", "Community Pop-Up Volunteer Events | That's Just Good",
      "Free community pop-up events where neighbors come together to help a local cause. Get pop-up alerts or bring one to your neighborhood."),
     ("team-building", "team-building.html", "Team Building", "Team Building Impact Events in DFW | That's Just Good",
      "Private, cause-driven team building events for companies and groups in Dallas-Fort Worth and beyond. Pick any cause and we handle setup, supplies and hosting."),
-    ("kids", "kids.html", "Schools & Kids", "Nico Makes A Difference School & Kids Events | That's Just Good",
+    ("kids", "kids.html", "School Reading Visits", "Nico Makes A Difference School & Kids Events | That's Just Good",
      "Nico Makes A Difference reading visits for schools, daycares, libraries and youth programs: a story, a conversation and a hands-on kindness activity."),
-    ("partners", "partners.html", "Impact Partners", "Corporate Impact Partners & the Good Council | That's Just Good",
+    ("partners", "partners.html", "For Companies", "Corporate Impact Partners & the Good Council | That's Just Good",
      "Join the Corporate Good Council or hire That's Just Good to design and run your company's giving and volunteering program, from team events to company-wide Days of Service."),
     ("impact-hub", "impact-hub.html", "Impact Hub", "My Impact Hub: Volunteer Hour Tracking for Groups, Students & Companies",
      "Track volunteer hours, donations and goals for NHS chapters, clubs, Greek life, companies and students. Verified transcripts, awards, badges and an annual Impact Unwrapped. Join the waitlist."),
@@ -43,6 +43,15 @@ NAV = [
     ("contact", None),
 ]
 TAGLINE = "Do good together. See it add up."
+# One plain line under each menu item, so visitors know where a link goes before they click
+NAV_DESC = {
+    "community": "Free volunteer events anyone can join",
+    "team-building": "A volunteer event just for your team",
+    "kids": "Nico story time and a kindness activity",
+    "partners": "Year-round giving and volunteer programs",
+    "podcast": "Conversations with people doing good",
+    "books": "Nico Makes A Difference for kids",
+}
 
 # Pages rendered by /assets/app.js from the events API. Not indexed by search engines.
 APP_PAGES = [
@@ -88,7 +97,7 @@ def header(mode, current=None):
             here = current in children
             CUR = ' aria-current="page"'
             subs = "".join(
-                f'<a href="{L[s]}"{CUR if s == current else ""}>{LABEL[s]}</a>' for s in children)
+                f'<a href="{L[s]}"{CUR if s == current else ""}><b>{LABEL[s]}</b><span>{NAV_DESC[s]}</span></a>' for s in children)
             gid = "nav-" + key.lower()
             items.append(
                 f'<div class="nav-group{" here" if here else ""}">'
@@ -115,10 +124,10 @@ def footer(mode):
       <p><a href="mailto:dogood@thatsjustgood.com">dogood@thatsjustgood.com</a></p>
     </div>
     <div><div class="footer-head">Events</div><ul>
-      <li><a href="{L["community"]}">Community Pop-Ups</a></li><li><a href="{L["team-building"]}">Team Building</a></li>
-      <li><a href="{L["kids"]}">Schools &amp; Kids</a></li><li><a href="{L["partners"]}">Impact Partners</a></li></ul></div>
+      <li><a href="{L["community"]}">Free Community Events</a></li><li><a href="{L["team-building"]}">Team Building</a></li>
+      <li><a href="{L["kids"]}">School Reading Visits</a></li><li><a href="{L["partners"]}">For Companies</a></li></ul></div>
     <div><div class="footer-head">Platform &amp; Media</div><ul>
-      <li><a href="{L["impact-hub"]}">My Impact Hub</a></li><li><a href="{L["podcast"]}">Podcast</a></li>
+      <li><a href="{L["impact-hub"]}">Impact Hub</a></li><li><a href="{L["podcast"]}">Podcast</a></li>
       <li><a href="{L["books"]}">Books</a></li><li><a href="{L["about"]}">About</a></li><li><a href="{L["contact"]}">Contact</a></li></ul></div>
     <div><div class="footer-head">Follow</div><ul>
       <li><a href="https://www.instagram.com/thatsjustgood" target="_blank" rel="noopener">Instagram</a></li>
